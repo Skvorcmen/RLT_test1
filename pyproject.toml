@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "rlt-test1"
+version = "0.1.0"
+description = "Telegram bot for video analytics with natural language queries"
+authors = ["Skvorcmen"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.0.0"
+asyncpg = "^0.29.0"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.0"}
+alembic = "^1.13.0"
+httpx = "^0.26.0"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
