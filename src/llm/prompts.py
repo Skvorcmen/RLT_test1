@@ -71,10 +71,19 @@ EXAMPLES = """
    SQL: SELECT COUNT(*) FROM video_snapshots 
         WHERE delta_views_count < 0;
 
+8. "Какое суммарное количество просмотров набрали все видео, опубликованные в июне 2025 года?"
+   SQL: SELECT SUM(views_count) FROM videos 
+        WHERE video_created_at >= '2025-06-01' 
+        AND video_created_at < '2025-07-01';
+
 Важно различать:
 - "Сколько замеров/видео/записей" → используй COUNT(*)
 - "На сколько в сумме/сколько всего" (про сумму значений) → используй SUM()
 - "Сколько разных" → используй COUNT(DISTINCT ...)
+- Для итоговой статистики по видео (просмотры, лайки и т.д.) используй таблицу videos и поля views_count, likes_count и т.д.
+- Для прироста/изменений используй таблицу video_snapshots и поля delta_views_count, delta_likes_count и т.д.
+- Для фильтрации по дате публикации видео используй video_created_at в таблице videos
+- Для фильтрации по дате замера используй created_at в таблице video_snapshots
 """
 
 
