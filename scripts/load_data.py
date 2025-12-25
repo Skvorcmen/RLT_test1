@@ -11,11 +11,18 @@ from src.db.models import Video, VideoSnapshot
 
 
 def parse_datetime(dt_str: str) -> datetime:
-    """Парсит строку даты в datetime объект"""
+    """Парсит строку даты в datetime объект (без timezone)"""
     try:
-        return datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+        dt = datetime.fromisoformat(dt_str.replace('Z', '+00:00'))
+        # Убираем timezone для PostgreSQL TIMESTAMP WITHOUT TIME ZONE
+        if dt.tzinfo is not None:
+            dt = dt.replace(tzinfo=None)
+        return dt
     except:
-        return datetime.fromisoformat(dt_str)
+        dt = datetime.fromisoformat(dt_str)
+        if dt.tzinfo is not None:
+            dt = dt.replace(tzinfo=None)
+        return dt
 
 
 async def load_videos_data(session: AsyncSession, json_file: str):

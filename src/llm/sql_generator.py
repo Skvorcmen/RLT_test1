@@ -38,16 +38,24 @@ def extract_sql_from_response(response_text: str) -> Optional[str]:
     # Ищем SQL в markdown блоке
     sql_match = re.search(r'```(?:sql)?\s*(SELECT.*?)(?:```|$)', response_text, re.IGNORECASE | re.DOTALL)
     if sql_match:
-        return sql_match.group(1).strip()
+        sql = sql_match.group(1).strip()
+        # Убираем точку с запятой в конце если есть
+        sql = sql.rstrip(';').strip()
+        return sql
     
-    # Ищем SQL напрямую
+    # Ищем SQL напрямую (до точки с запятой или конца строки)
     sql_match = re.search(r'(SELECT.*?)(?:;|$)', response_text, re.IGNORECASE | re.DOTALL)
     if sql_match:
-        return sql_match.group(1).strip()
+        sql = sql_match.group(1).strip()
+        # Убираем точку с запятой в конце если есть
+        sql = sql.rstrip(';').strip()
+        return sql
     
     # Если весь ответ похож на SQL
     if response_text.upper().startswith('SELECT'):
-        return response_text.strip()
+        sql = response_text.strip()
+        sql = sql.rstrip(';').strip()
+        return sql
     
     return None
 

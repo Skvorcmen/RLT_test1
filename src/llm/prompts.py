@@ -61,6 +61,11 @@ EXAMPLES = """
    SQL: SELECT COUNT(DISTINCT video_id) FROM video_snapshots 
         WHERE DATE(created_at) = '2025-11-27' 
         AND delta_views_count > 0;
+
+6. "Сколько видео у креатора с id 'aca1061a9d324ecf8c3fa2bb32d7be63' набрали больше 10000 просмотров по итоговой статистике?"
+   SQL: SELECT COUNT(*) FROM videos 
+        WHERE creator_id = 'aca1061a9d324ecf8c3fa2bb32d7be63' 
+        AND views_count > 10000;
 """
 
 
