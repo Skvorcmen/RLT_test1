@@ -73,7 +73,7 @@ async def generate_sql(user_query: str) -> Optional[str]:
     prompt = get_sql_generation_prompt(user_query)
     
     try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
+        async with httpx.AsyncClient(timeout=120.0) as client:
             response = await client.post(
                 f"{OLLAMA_BASE_URL}/api/generate",
                 json={

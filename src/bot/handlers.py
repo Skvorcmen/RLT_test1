@@ -87,9 +87,6 @@ async def handle_text_message(message: Message):
         await message.answer("Пожалуйста, задай вопрос на русском языке.")
         return
     
-    # Отправляем сообщение о том, что обрабатываем запрос
-    processing_msg = await message.answer("Обрабатываю запрос...")
-    
     try:
         # Генерируем SQL запрос
         print(f"Генерация SQL для запроса: {user_query}")
@@ -97,7 +94,7 @@ async def handle_text_message(message: Message):
         
         if not sql:
             print("Не удалось сгенерировать SQL")
-            await processing_msg.edit_text(
+            await message.answer(
                 "Извините, не удалось сформировать запрос к базе данных. "
                 "Попробуйте переформулировать вопрос."
             )
@@ -110,7 +107,7 @@ async def handle_text_message(message: Message):
         
         if not success:
             print(f"Ошибка при выполнении SQL: {sql}")
-            await processing_msg.edit_text(
+            await message.answer(
                 "Произошла ошибка при выполнении запроса. "
                 "Попробуйте переформулировать вопрос."
             )
@@ -128,23 +125,13 @@ async def handle_text_message(message: Message):
             answer = str(result)
         
         print(f"Отправка ответа: {answer}")
-        try:
-            await processing_msg.edit_text(answer)
-        except Exception as e:
-            print(f"Ошибка при редактировании сообщения: {e}")
-            # Если не удалось отредактировать, отправляем новое сообщение
-            await message.answer(answer)
+        await message.answer(answer)
         
     except Exception as e:
         import traceback
         print(f"Ошибка при обработке сообщения: {e}")
         print(traceback.format_exc())
-        try:
-            await processing_msg.edit_text(
-                "Произошла ошибка при обработке запроса. Попробуйте позже."
-            )
-        except:
-            await message.answer(
-                "Произошла ошибка при обработке запроса. Попробуйте позже."
-            )
+        await message.answer(
+            "Произошла ошибка при обработке запроса. Попробуйте позже."
+        )
 
