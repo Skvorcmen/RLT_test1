@@ -14,16 +14,20 @@ def validate_sql(sql: str) -> bool:
     """
     sql_upper = sql.strip().upper()
     
-    # Запрещенные ключевые слова
-    forbidden = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'CREATE', 'TRUNCATE']
-    
-    for keyword in forbidden:
-        if keyword in sql_upper:
-            return False
-    
     # Должен начинаться с SELECT
     if not sql_upper.startswith('SELECT'):
         return False
+    
+    # Запрещенные ключевые слова (проверяем как целые слова, не подстроки)
+    forbidden = ['DROP', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'CREATE', 'TRUNCATE']
+    
+    # Разбиваем SQL на слова (по пробелам, скобкам, запятым и т.д.)
+    import re
+    words = re.findall(r'\b\w+\b', sql_upper)
+    
+    for keyword in forbidden:
+        if keyword in words:
+            return False
     
     return True
 
