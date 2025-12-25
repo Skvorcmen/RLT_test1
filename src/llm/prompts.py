@@ -76,6 +76,15 @@ EXAMPLES = """
         WHERE video_created_at >= '2025-06-01' 
         AND video_created_at < '2025-07-01';
 
+9. "На сколько просмотров суммарно выросли все видео креатора с id 'cd87be38b50b4fdd8342bb3c383f3c7d' в промежутке с 10:00 до 15:00 28 ноября 2025 года?"
+   SQL: SELECT COALESCE(SUM(vs.delta_views_count), 0) 
+        FROM video_snapshots vs
+        JOIN videos v ON vs.video_id = v.id
+        WHERE v.creator_id = 'cd87be38b50b4fdd8342bb3c383f3c7d'
+        AND DATE(vs.created_at) = '2025-11-28'
+        AND EXTRACT(HOUR FROM vs.created_at) >= 10
+        AND EXTRACT(HOUR FROM vs.created_at) < 15;
+
 Важно различать:
 - "Сколько замеров/видео/записей" → используй COUNT(*)
 - "На сколько в сумме/сколько всего" (про сумму значений) → используй SUM()
@@ -84,6 +93,8 @@ EXAMPLES = """
 - Для прироста/изменений используй таблицу video_snapshots и поля delta_views_count, delta_likes_count и т.д.
 - Для фильтрации по дате публикации видео используй video_created_at в таблице videos
 - Для фильтрации по дате замера используй created_at в таблице video_snapshots
+- Если нужно фильтровать замеры по creator_id, используй JOIN: JOIN videos v ON video_snapshots.video_id = v.id, затем WHERE v.creator_id = '...'
+- Для фильтрации по времени используй EXTRACT(HOUR FROM created_at) >= X AND EXTRACT(HOUR FROM created_at) < Y (не используй функцию TIME())
 """
 
 
